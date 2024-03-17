@@ -1,6 +1,7 @@
 package com.marlonnunes.carrental.keycloak;
 
 import com.marlonnunes.carrental.dto.commons.IdNameDTO;
+import com.marlonnunes.carrental.dto.keycloak.CredentialKeycloakDTO;
 import com.marlonnunes.carrental.dto.keycloak.KeycloakTokenDTO;
 import com.marlonnunes.carrental.dto.keycloak.SaveUserKeycloakDTO;
 import com.marlonnunes.carrental.dto.keycloak.UserKeycloakDTO;
@@ -196,4 +197,53 @@ public class KeycloakAPI {
 
         return ResponseEntity.ok(List.of(result.getBody()));
     }
+
+    public String getUserCredentialsDetails(String userKeycloakId){
+        final String path = "admin/realms/" + keycloakRealm + "/users/" + userKeycloakId + "/credentials";
+
+        HttpHeaders headers = this.getHeaders();
+        RestTemplate restTemplate = new RestTemplate();
+        HttpEntity<List<IdNameDTO>> entity = new HttpEntity<>(headers);
+
+        IdNameDTO[] result = null;
+
+        try{
+            result = restTemplate.exchange(this.keycloakUrl + path, HttpMethod.GET, entity, IdNameDTO[].class).getBody();
+        }catch (HttpClientErrorException e){
+            log.error("An error occurred while fetching user credentials for user: {}", userKeycloakId, e);
+            throw new ResponseStatusException(e.getStatusCode(), "Erro ao buscar credenciais do usuário");
+        }
+
+        if(result.length < 1){
+            log.error("No credentials found for this user: {}", userKeycloakId);
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Nenhuma credencial cadastrada para este usuário");
+        } else if (result.length > 1) {
+            log.warn("More than one credential for this user {} in keycloak. Returning only first", userKeycloakId);
+        }
+
+        return result[0].id();
+    }
+
+    public ResponseEntity<Void> resetPassword(String userKeycloakId, String credentialId, String password){
+        final String path = "admin/realms/" + keycloakRealm + "/users/" + userKeycloakId + "/reset-password";
+
+        HttpHeaders headers = this.getHeaders();
+        RestTemplate restTemplate = new RestTemplate();
+
+        HttpEntity<CredentialKeycloakDTO> entity = new HttpEntity<>(CredentialKeycloakDTO.update(credentialId, password), headers);
+
+        ResponseEntity<Void> result = null;
+
+        try{
+            result = restTemplate.exchange(this.keycloakUrl + path, HttpMethod.PUT, entity, Void.class);
+        }catch (HttpClientErrorException e){
+            log.error("An error occurred while resetting the user password: {}", userKeycloakId, e);
+            throw new ResponseStatusException(e.getStatusCode(), "Erro ao atualizar credencial do usuário");
+        }
+
+        return result;
+
+    }
+
+
 }

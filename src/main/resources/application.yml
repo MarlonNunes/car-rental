@@ -21,6 +21,17 @@ spring:
         jwt:
           issuer-uri: http://localhost:8080/realms/${keycloak.app.realm}
           jwk-set-uri: ${spring.security.oauth2.resourceserver.jwt.issuer-uri}/protocol/openid-connect/certs
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ${email.user}
+    password: ${email.key}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
   config:
     import: aws-secretsmanager:/secret/car-rental_default
 
