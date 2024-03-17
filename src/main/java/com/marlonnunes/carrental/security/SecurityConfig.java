@@ -23,7 +23,12 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(CsrfConfigurer::disable)
-                .oauth2ResourceServer(oauth2 -> oauth2.jwt(jwt -> jwt.jwtAuthenticationConverter(new JwtConverter(userService))));
+                .oauth2ResourceServer(oauth2 -> oauth2.jwt(jwt -> jwt.jwtAuthenticationConverter(new JwtConverter(userService))))
+                .authorizeHttpRequests(request ->
+                        request.requestMatchers("/admin/**").hasRole("ADMIN")
+                                .requestMatchers("/error").permitAll()
+                                .requestMatchers("/login/**").permitAll()
+                                .anyRequest().authenticated());
 
 
         return http.build();

@@ -4,14 +4,19 @@ import com.marlonnunes.carrental.model.User;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceLoader;
 import org.springframework.http.HttpStatus;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
+import software.amazon.awssdk.utils.IoUtils;
 
+import java.io.IOException;
 import java.time.format.DateTimeFormatter;
 
 @Service
@@ -20,6 +25,9 @@ public class EmailService {
 
     @Autowired
     private JavaMailSender mailSender;
+
+    @Autowired
+    private ResourceLoader resourceLoader;
 
 
     private void sendEmail(String to, String body, String subject){
@@ -45,18 +53,39 @@ public class EmailService {
         this.sendEmail(user.getEmail(), body, "CAR-RENTAL: RESETE SUA SENHA");
     }
 
-    private String buildBodyEmailToResetPassword(User user, String idCredential){
-        String body = "<h2>Ol&aacute;, {username}.</h2>\n" +
-                "\n" +
-                "<p><span style=\"font-size:14px\"><span style=\"font-family:arial,helvetica,sans-serif\">Abaixo est&atilde;o os dados para voc&ecirc; resetar sua senha:</span></span></p>\n" +
-                "\n" +
-                "<p><span style=\"font-size:16px\"><strong>C&oacute;digo de verifica&ccedil;&atilde;o:</strong>&nbsp;{verification_code}<br />\n" +
-                "<strong>ID da sua credencial:</strong>&nbsp;{credential_id}</span></p>\n" +
-                "\n" +
-                "<p>Voc&ecirc; tem at&eacute; o dia {valid_until}&nbsp;para utilizar estes dados. Ap&oacute;s a data, ser&aacute; preciso repetir o processo para resetar a senha.</p>\n" +
-                "\n" +
-                "<p><strong><span style=\"font-size:14px\">Caso voc&ecirc; n&atilde;o tenha solicitado altera&ccedil;&atilde;o de senha, desconsidere este e-mail e n&atilde;o passe os dados para ningu&eacute;m.</span></strong></p>\n";
+    public void sendEmailToCreatePassword(User user) {
+        String body = this.buildBodyEmailToCreatePassword(user);
+        this.sendEmail(user.getEmail(), body, "CAR-RENTAL: CRIE SUA CONTA");
+    }
 
+    private String buildBodyEmailToResetPassword(User user, String idCredential){
+        Resource resource = resourceLoader.getResource("classpath:/templates/reset-password.html");
+        String body = null;
+        try {
+            body = IoUtils.toUtf8String(resource.getInputStream());
+        } catch (IOException e) {
+            log.error("An error occurred while converting reset-password.html file", e);
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Erro ao enviar e-mail para resetar a senha");
+        }
+
+        return this.changeEmailVariables(body, user, idCredential);
+    }
+
+    private String buildBodyEmailToCreatePassword(User user){
+        Resource resource = resourceLoader.getResource("classpath:/templates/create-password.html");
+        String body = null;
+        try {
+            body = IoUtils.toUtf8String(resource.getInputStream());
+        } catch (IOException e) {
+            log.error("An error occurred while converting create-password.html file", e);
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Erro ao enviar e-mail de criação de senha");
+        }
+
+        return this.changeEmailVariables(body, user, "");
+
+    }
+
+    private String changeEmailVariables(String body, User user, String idCredential){
         body = body.replace("{username}", user.getFirstName());
         body = body.replace("{verification_code}", user.getVerificationCode());
         body = body.replace("{credential_id}", idCredential);

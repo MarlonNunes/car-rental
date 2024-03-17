@@ -3,6 +3,7 @@ package com.marlonnunes.carrental.model;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
@@ -23,6 +24,7 @@ public class User {
     @Column(unique = true)
     private String email;
 
+    @Column(unique = true)
     private String cpf;
 
     private Boolean enabled;
@@ -30,4 +32,10 @@ public class User {
     private String verificationCode;
 
     private LocalDateTime verificationCodeValidUntil;
+
+    private LocalDateTime createdAt;
+
+    private Long createdBy;
+
+    private LocalDateTime updatedAt;
 }

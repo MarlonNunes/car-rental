@@ -19,7 +19,6 @@ public record SaveUserKeycloakDTO(
 ) {
 
     public static SaveUserKeycloakDTO fromCreateUserDto(CreateUserDTO user){
-        CredentialKeycloakDTO credential = CredentialKeycloakDTO.create(user.password());
         return new SaveUserKeycloakDTO(
                 null,
                 user.email(),
@@ -28,7 +27,7 @@ public record SaveUserKeycloakDTO(
                 user.firstName(),
                 user.lastName(),
                 user.email(),
-                List.of(credential),
+                null,
                 null
         );
     }

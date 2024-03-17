@@ -8,16 +8,6 @@ public record CredentialKeycloakDTO(
 
 ) {
 
-
-    public static CredentialKeycloakDTO create(String password){
-        return new CredentialKeycloakDTO(
-                null,
-                "password",
-                "password",
-                password
-        );
-    }
-
     public static CredentialKeycloakDTO update(String id, String password){
         return new CredentialKeycloakDTO(
                 id,
