@@ -9,13 +9,14 @@ import org.hibernate.validator.constraints.br.CPF;
 import java.util.List;
 
 public record CreateUserDTO(
-        @Email
+        @NotEmpty(message = "{dto.user.create-user.email.not-empty}")
+        @Email(message = "{dto.user.create-user.email.invalid}")
         String email,
-        @NotEmpty
+        @NotEmpty(message = "{dto.user.create-user.first-name.not-empty}")
         String firstName,
         String lastName,
-        @CPF
-        @NotEmpty
+        @CPF(message = "{dto.user.create-user.cpf.invalid}")
+        @NotEmpty(message = "{dto.user.create-user.cpf.not-empty}")
         String cpf,
         List<IdNameDTO> roles
 ) {

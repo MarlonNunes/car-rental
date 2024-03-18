@@ -40,7 +40,7 @@ public class EmailService {
             helper.setSubject(subject);
         }catch (MessagingException e){
             log.error("An error occurred when building the email body. Body: {}", body, e);
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Erro ao enviar e-mail");
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "service.email-service.send-email.error");
         }
 
         this.mailSender.send(mimeMesage);
@@ -65,7 +65,7 @@ public class EmailService {
             body = IoUtils.toUtf8String(resource.getInputStream());
         } catch (IOException e) {
             log.error("An error occurred while converting reset-password.html file", e);
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Erro ao enviar e-mail para resetar a senha");
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "service.email-service.build-body-email-to-reset-password.error");
         }
 
         return this.changeEmailVariables(body, user, idCredential);
@@ -78,7 +78,7 @@ public class EmailService {
             body = IoUtils.toUtf8String(resource.getInputStream());
         } catch (IOException e) {
             log.error("An error occurred while converting create-password.html file", e);
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Erro ao enviar e-mail de criação de senha");
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "service.email-service.build-body-email-to-create-password.error");
         }
 
         return this.changeEmailVariables(body, user, "");

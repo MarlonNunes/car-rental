@@ -101,6 +101,7 @@ public class KeycloakAPI {
             result = restTemplate.exchange(this.keycloakUrl + this.USERS_ENDPOINT, HttpMethod.GET, entity, new ParameterizedTypeReference<List<UserKeycloakDTO>>() {});
         } catch (HttpClientErrorException e){
             log.error("An error occurred when fetching keycloak users", e);
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "keycloak.error.users.get-all");
         }
         return result;
     }
@@ -119,12 +120,12 @@ public class KeycloakAPI {
             result = restTemplate.exchange(uriBuilder.toUriString(), HttpMethod.GET, entity, new ParameterizedTypeReference<>() {});
         } catch (HttpClientErrorException e){
             log.error("An error occurred when fetching user with email: {}", email, e);
-            throw new ResponseStatusException(e.getStatusCode(), "Não foi possível localizar o usuário no keycloak");
+            throw new ResponseStatusException(e.getStatusCode(), "keycloak.error.users.by-email");
         }
        List<UserKeycloakDTO> users = result.getBody();
         if(users.isEmpty()){
             log.error("no results for this email {} on keycloak", email);
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Nenhum usuário cadastrado com este e-mail no keycloack");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "keycloak.exception.user.email-not-found");
         }else if(users.size() > 1){
             log.warn("More than one result for this email {} on keycloak. Returning only first", email);
         }
@@ -145,7 +146,7 @@ public class KeycloakAPI {
             result = restTemplate.exchange(this.keycloakUrl + this.USERS_ENDPOINT, HttpMethod.POST, entity, String.class);
         }catch (HttpClientErrorException e){
             log.error("An error occurred when create user: {}", user, e);
-            throw new ResponseStatusException(e.getStatusCode(), "Erro ao salvar usuário");
+            throw new ResponseStatusException(e.getStatusCode(), "keycloak.error.users.save");
         }
 
         ResponseEntity<UserKeycloakDTO> userKeycloak = this.getUserByEmail(user.email());
@@ -168,7 +169,7 @@ public class KeycloakAPI {
             result = restTemplate.exchange(this.keycloakUrl + path, HttpMethod.POST, entity, String.class);
         }catch (HttpClientErrorException e){
             log.error("An error occurred when assing role: {} for user: {}", roles, userKeycloakId, e);
-            throw new ResponseStatusException(e.getStatusCode(), "Erro ao associar role ao usuário");
+            throw new ResponseStatusException(e.getStatusCode(), "keycloak.error.roles.assign");
         }
 
         return result;
@@ -192,7 +193,7 @@ public class KeycloakAPI {
             result = restTemplate.exchange(uriBuilder.toUriString(), HttpMethod.GET, entity,  IdNameDTO[].class);
         } catch (HttpClientErrorException e){
             log.error("An error occurred when fetching roles", e);
-            throw new ResponseStatusException(e.getStatusCode(), "Não foi possível buscar as permissões no keycloak");
+            throw new ResponseStatusException(e.getStatusCode(), "keycloak.error.roles.get-all");
         }
 
         return ResponseEntity.ok(List.of(result.getBody()));
@@ -211,12 +212,12 @@ public class KeycloakAPI {
             result = restTemplate.exchange(this.keycloakUrl + path, HttpMethod.GET, entity, IdNameDTO[].class).getBody();
         }catch (HttpClientErrorException e){
             log.error("An error occurred while fetching user credentials for user: {}", userKeycloakId, e);
-            throw new ResponseStatusException(e.getStatusCode(), "Erro ao buscar credenciais do usuário");
+            throw new ResponseStatusException(e.getStatusCode(), "keycloak.error.credentials.get");
         }
 
         if(result.length < 1){
             log.error("No credentials found for this user: {}", userKeycloakId);
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Nenhuma credencial cadastrada para este usuário");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "keycloak.exception.credential.not-found");
         } else if (result.length > 1) {
             log.warn("More than one credential for this user {} in keycloak. Returning only first", userKeycloakId);
         }
@@ -238,7 +239,7 @@ public class KeycloakAPI {
             result = restTemplate.exchange(this.keycloakUrl + path, HttpMethod.PUT, entity, Void.class);
         }catch (HttpClientErrorException e){
             log.error("An error occurred while resetting the user password: {}", userKeycloakId, e);
-            throw new ResponseStatusException(e.getStatusCode(), "Erro ao atualizar credencial do usuário");
+            throw new ResponseStatusException(e.getStatusCode(), "keycloak.error.users.reset-password");
         }
 
         return result;

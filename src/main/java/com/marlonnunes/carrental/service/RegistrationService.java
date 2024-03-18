@@ -79,12 +79,12 @@ public class RegistrationService {
         User user = this.userService.getById(resetPassword.userId());
 
         if(!resetPassword.verificationCode().equals(user.getVerificationCode())){
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Código de verificação inválido");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "service.registration-service.reset-password.verification-code.invalid");
         }
 
         if(user.getVerificationCodeValidUntil().isBefore(LocalDateTime.now())){
             this.sendEmailToResetPassword(user.getEmail());
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Código expirado. Você receberá um novo e-mail atualizado");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "service.registration-service.reset-password.verification-code.expired");
         }
 
         ResponseEntity<Void> result = this.keycloakAPI.resetPassword(user.getKeycloakId(), resetPassword.credentialId(), resetPassword.password());
@@ -101,12 +101,12 @@ public class RegistrationService {
         User user = this.userService.getById(createPassword.userId());
 
         if(!createPassword.verificationCode().equals(user.getVerificationCode())){
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Código de verificação inválido");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "service.registration-service.reset-password.verification-code.invalid");
         }
 
         if(user.getVerificationCodeValidUntil().isBefore(LocalDateTime.now())){
             this.sendEmailToResetPassword(user.getEmail());
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Código expirado. Você receberá um novo e-mail atualizado");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "service.registration-service.reset-password.verification-code.expired");
         }
 
         ResponseEntity<Void> result = this.keycloakAPI.resetPassword(user.getKeycloakId(), null, createPassword.password());

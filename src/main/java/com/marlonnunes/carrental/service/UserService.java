@@ -17,22 +17,22 @@ public class UserService {
     private UserRepository repository;
 
     public User getUserByEmail(String email){
-        return this.repository.findUserByEmail(email).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuário não encontrado"));
+        return this.repository.findUserByEmail(email).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "service.user-service.default.not-found"));
     }
 
     public User getUserByKeycloakId(String keycloakId){
-        return this.repository.findByKeycloakId(keycloakId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuário não encontrado"));
+        return this.repository.findByKeycloakId(keycloakId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "service.user-service.default.not-found"));
     }
 
     public User getById(Long userId){
-        return this.repository.findById(userId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuário não encontrado"));
+        return this.repository.findById(userId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "service.user-service.default.not-found"));
     }
 
     public void checkIfUserIsAlreadyRegistered(CreateUserDTO userDTO){
         List<User> users = this.repository.findByEmailOrCpf(userDTO.email(), userDTO.cpf());
 
         if(!users.isEmpty()){
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Usuário já cadastrado");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "service.user-service.default.already-exists");
         }
     }
 

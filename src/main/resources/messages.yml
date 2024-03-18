@@ -1,0 +1,62 @@
+keycloak:
+  error:
+    users:
+      get-all: Ocorreu algum erro ao buscar usuários
+      by-email: Ocorreu um erro ao buscar usuário por e-mail
+      save: Ocorreu um erro ao salvar usuário
+      reset-password: Ocorreu um erro ao atualizar credencial do usuário
+    roles:
+      assign: Ocorreu um erro ao associar role ao usuário
+      get-all: Ocorreu um erro ao buscar as permissões no keycloak
+    credentials:
+      get: Ocorreu um erro ao buscar credenciais do usuário
+  exception:
+    user:
+      email-not-found: Usuário não encontrado com este e-mail
+    credential:
+      not-found: Nenhuma credencial cadastrada para este usuário
+dto:
+  user:
+    create-user:
+      cpf:
+        not-empty: O cpf não pode ser nulo
+        invalid: O cpf do usuário inválido
+      first-name:
+        not-empty: O primeiro nome não pode ser nulo
+      email:
+        not-empty: O e-mail é obrigatório
+        invalid: O e-mail é inválido
+  registration:
+    create-password:
+      user-id: O id do usuário não pode ser nulo
+      verification-code: o código de verificação não pode ser nulo
+      password: A senha não pode ser nula
+    reset-password:
+      credential-id: A credencial do usuário não pode ser nula
+service:
+  email-service:
+    send-email:
+      error: Ocorreu um erro ao enviar o e-mail
+    build-body-email-to-reset-password:
+      error: Ocorreu um erro ao enviar e-mail para resetar a senha
+    build-body-email-to-create-password:
+      error: Ocorreu um erro ao enviar e-mail para criar a senha
+  user-service:
+    default:
+      not-found: Usuário não encontrado
+      already-exists: Usuário já cadastrado
+  registration-service:
+    reset-password:
+      verification-code:
+        invalid: Código de verificação inválido.
+        expired: Código de verificação expirado. Enviaremos um novo por e-mail.
+controller:
+  global-handle-exception:
+    null-pointer: Tentou acessar uma propriedade nula
+
+
+
+
+
+
+
