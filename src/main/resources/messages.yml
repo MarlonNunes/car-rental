@@ -33,6 +33,12 @@ dto:
       password: A senha não pode ser nula
     reset-password:
       credential-id: A credencial do usuário não pode ser nula
+  vehicle:
+    create-vehicle:
+      number-plate: A placa é obrigatória
+      make: A marca é obrigatória
+      model: O modelo é obrigatório
+      color: A cor é obrigatória
 service:
   email-service:
     send-email:
@@ -45,14 +51,22 @@ service:
     default:
       not-found: Usuário não encontrado
       already-exists: Usuário já cadastrado
+    get-by-ids:
+      empty-list: Nenhum usuário encontrado
   registration-service:
     reset-password:
       verification-code:
         invalid: Código de verificação inválido.
         expired: Código de verificação expirado. Enviaremos um novo por e-mail.
+  vehicle-service:
+    get-by-id:
+      not-found: Veículo não encontrado
+    create:
+      number-plate-already-exists: Placa já cadastrada
 controller:
   global-handle-exception:
     null-pointer: Tentou acessar uma propriedade nula
+    exception: Ocorreu um erro desconhecido
 
 
 

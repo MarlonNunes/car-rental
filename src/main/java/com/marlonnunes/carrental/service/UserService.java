@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.Collection;
 import java.util.List;
 
 @Service
@@ -26,6 +27,15 @@ public class UserService {
 
     public User getById(Long userId){
         return this.repository.findById(userId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "service.user-service.default.not-found"));
+    }
+
+    public List<User> getByIds(Collection<Long> ids){
+        List<User> users = this.repository.findAllById(ids);
+        if(users.isEmpty()){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "service.user-service.get-by-ids.empty-list");
+        }
+
+        return users;
     }
 
     public void checkIfUserIsAlreadyRegistered(CreateUserDTO userDTO){

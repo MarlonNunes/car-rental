@@ -1,6 +1,7 @@
 package com.marlonnunes.carrental.controller;
 
 import com.marlonnunes.carrental.dto.commons.ErrorResponseDTO;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
@@ -15,6 +16,7 @@ import org.springframework.web.server.ResponseStatusException;
 import java.util.List;
 
 @RestControllerAdvice
+@Slf4j
 public class GlobalHandleExceptionController {
 
     @Autowired
@@ -24,14 +26,14 @@ public class GlobalHandleExceptionController {
     private String getMessage(String messageCode){
         return messageSource.getMessage(messageCode, null, LocaleContextHolder.getLocale());
     }
-    @ExceptionHandler(value = ResponseStatusException.class)
-    private ResponseEntity<ErrorResponseDTO> handleResponseStatusException(ResponseStatusException e){
+    @ExceptionHandler(ResponseStatusException.class)
+    public ResponseEntity<ErrorResponseDTO> handleResponseStatusException(ResponseStatusException e){
                 ErrorResponseDTO error = ErrorResponseDTO.simpleError(this.getMessage(e.getReason()));
                 return new ResponseEntity<>(error, e.getStatusCode());
     }
 
-    @ExceptionHandler(value = MethodArgumentNotValidException.class)
-    private ResponseEntity<ErrorResponseDTO> handleMethodArgumentNotValidException(MethodArgumentNotValidException e){
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<ErrorResponseDTO> handleMethodArgumentNotValidException(MethodArgumentNotValidException e){
         BindingResult bindingResult = e.getBindingResult();
 
         List<String> errors = bindingResult.getAllErrors().stream()
@@ -40,8 +42,15 @@ public class GlobalHandleExceptionController {
         return new ResponseEntity<>(new ErrorResponseDTO(errors), HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler(value = NullPointerException.class)
-    private ResponseEntity<ErrorResponseDTO> handleNullPointerException(NullPointerException e){
+    @ExceptionHandler(NullPointerException.class)
+    public ResponseEntity<ErrorResponseDTO> handleNullPointerException(NullPointerException e){
+        log.error("an error has occurred", e);
         return new ResponseEntity<>(ErrorResponseDTO.simpleError(this.getMessage("controller.global-handle-exception.null-pointer")), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ErrorResponseDTO> handleException(Exception e){
+        log.error("an error has occurred", e);
+        return new ResponseEntity<>(ErrorResponseDTO.simpleError(this.getMessage("controller.global-handle-exception.exception")), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }

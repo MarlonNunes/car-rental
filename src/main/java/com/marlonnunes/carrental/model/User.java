@@ -38,4 +38,8 @@ public class User {
     private Long createdBy;
 
     private LocalDateTime updatedAt;
+
+    public String getFullName(){
+        return this.firstName + " " + this.getLastName();
+    }
 }

@@ -1,5 +1,6 @@
 package com.marlonnunes.carrental.service;
 
+import com.marlonnunes.carrental.dto.commons.IdNameDTO;
 import com.marlonnunes.carrental.dto.keycloak.SaveUserKeycloakDTO;
 import com.marlonnunes.carrental.dto.keycloak.UserKeycloakDTO;
 import com.marlonnunes.carrental.dto.registration.CreatePasswordDTO;
@@ -17,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 public class RegistrationService {
@@ -118,4 +120,7 @@ public class RegistrationService {
         return result;
     }
 
+    public ResponseEntity<List<IdNameDTO>> getAllRoles() {
+        return this.keycloakAPI.getAllRoles();
+    }
 }
