@@ -4,6 +4,7 @@ import com.marlonnunes.carrental.model.enums.Color;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
@@ -21,6 +22,10 @@ public class Vehicle {
 
     private String make;
 
+    private Integer modelYear;
+
+    private Integer manufactureYear;
+
     private Color color;
 
     private Long createdBy;
@@ -30,4 +35,8 @@ public class Vehicle {
     private Long updatedBy;
 
     private LocalDateTime updatedAt;
+
+    private BigDecimal maxDailyValue;
+
+    private BigDecimal minDailyValue;
 }

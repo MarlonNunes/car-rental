@@ -3,7 +3,9 @@ package com.marlonnunes.carrental.dto.vehicle;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.marlonnunes.carrental.model.User;
 import com.marlonnunes.carrental.model.Vehicle;
+import jakarta.validation.constraints.NotNull;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 public record VehicleDTO (
@@ -20,7 +22,11 @@ public record VehicleDTO (
     @JsonFormat(pattern = "dd/MM/yyyy HH:mm")
     LocalDateTime createdAt,
     @JsonFormat(pattern = "dd/MM/yyyy HH:mm")
-    LocalDateTime updatedAt
+    LocalDateTime updatedAt,
+    BigDecimal maxDailyValue,
+    BigDecimal minDailyValue,
+    Integer modelYear,
+    Integer manufactureYear
     ){
 
     public static VehicleDTO fromVehicleWithUsers(Vehicle vehicle, User createdBy, User updatedBy){
@@ -35,7 +41,11 @@ public record VehicleDTO (
                 vehicle.getUpdatedBy(),
                 updatedBy.getFullName(),
                 vehicle.getCreatedAt(),
-                vehicle.getUpdatedAt()
+                vehicle.getUpdatedAt(),
+                vehicle.getMaxDailyValue(),
+                vehicle.getMinDailyValue(),
+                vehicle.getModelYear(),
+                vehicle.getManufactureYear()
         );
     }
 
@@ -51,7 +61,11 @@ public record VehicleDTO (
                 vehicle.getUpdatedBy(),
                 null,
                 vehicle.getCreatedAt(),
-                vehicle.getUpdatedAt()
+                vehicle.getUpdatedAt(),
+                vehicle.getMaxDailyValue(),
+                vehicle.getMinDailyValue(),
+                vehicle.getModelYear(),
+                vehicle.getManufactureYear()
         );
     }
 }

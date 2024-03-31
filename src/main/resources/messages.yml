@@ -39,6 +39,10 @@ dto:
       make: A marca é obrigatória
       model: O modelo é obrigatório
       color: A cor é obrigatória
+      max-daily-value: O valor máximo é obrigatório
+      min-daily-value: O valor mínimo é obrigatório
+      model-year: O ano do modelo é obrigatório
+      manufacture-year: O ano de fabricação é obrigatório
 service:
   email-service:
     send-email:
