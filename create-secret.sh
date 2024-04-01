@@ -8,8 +8,8 @@ export AWS_SECRET_ACCESS_KEY=test
 export AWS_DEFAULT_REGION=us-east-1
 
 JSON=$(jq -n \
-          --arg bd_user "$MYSQL_USER" \
-          --arg bd_pass "$MYSQL_PASSWORD" \
+          --arg bd_user "root" \
+          --arg bd_pass "$MYSQL_ROOT_PASSWORD" \
           --arg k_user "$KEYCLOAK_USER" \
           --arg k_pass "$KEYCLOAK_PASSWORD" \
           --arg k_admin_client "$KEYCLOAK_ADMIN_CLIENT_ID" \

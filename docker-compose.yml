@@ -38,12 +38,16 @@ services:
       KC_DB_USERNAME: root
       KC_DB_PASSWORD: ${MYSQL_ROOT_PASSWORD}
       KC_DB_URL: jdbc:mysql://mysql:3306/keycloack?createDatabaseIfNotExist=true
+    volumes:
+      - ./imports:/opt/keycloak/data/import
     ports:
       - "8080:8080"
     depends_on:
       - mysql
     restart: always
-    command: [ "start-dev"]
+    command:
+      - start-dev
+      - --import-realm
 
   init-localstack:
     image: amazon/aws-cli
