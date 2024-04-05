@@ -1,0 +1,19 @@
+spring:
+  datasource:
+    url: jdbc:mysql://${bd.url}/car_rental?createDatabaseIfNotExist=true
+    username: ${bd.user}
+    password: ${bd.password}
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: ${keycloak.url}/realms/car-rental-security
+          jwk-set-uri: ${spring.security.oauth2.resourceserver.jwt.issuer-uri}/protocol/openid-connect/certs
+  config:
+    import:
+      - aws-secretsmanager:/secret/car-rental
+
+keycloak:
+  url: ${keycloak.url}
+  admin-user: ${keycloak.admin.user}
+  admin-password: ${keycloak.admin.password}

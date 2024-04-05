@@ -1,0 +1,25 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;MODE=MySQL
+    username: sa
+    password:
+    driver-class: org.h2.Driver
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+  cloud:
+    aws:
+      secretsmanager:
+        enabled: false
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:8080/realms/car-rental-security
+          jwk-set-uri: ${spring.security.oauth2.resourceserver.jwt.issuer-uri}/protocol/openid-connect/certs
+  mail:
+    username: test
+    password: test
+
+keycloak:
+  admin-user: test
+  admin-password: test
