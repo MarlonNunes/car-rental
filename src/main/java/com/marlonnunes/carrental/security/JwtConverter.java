@@ -2,6 +2,7 @@ package com.marlonnunes.carrental.security;
 
 import com.marlonnunes.carrental.service.UserService;
 import com.marlonnunes.carrental.model.User;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -11,6 +12,7 @@ import org.springframework.security.oauth2.jwt.Jwt;
 import java.util.Collection;
 import java.util.Map;
 
+@Slf4j
 public class JwtConverter implements Converter<Jwt, AbstractAuthenticationToken> {
 
     private final UserService userService;
@@ -21,8 +23,9 @@ public class JwtConverter implements Converter<Jwt, AbstractAuthenticationToken>
     @Override
     public AbstractAuthenticationToken convert(Jwt source) {
 
-        String sub = source.getClaim("sub");
 
+        String sub = source.getClaim("sub");
+        log.info("Sub: " + sub);
         User user = this.userService.getUserByKeycloakId(sub);
 
 
