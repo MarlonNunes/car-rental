@@ -48,4 +48,4 @@ jobs:
         run: docker rm -f car_rental
 
       - name: Run Docker Container
-        run: docker run -d -p 8081:8081 --network=minha_rede mrlnnunes/car_rental:latest
+        run: docker run -d --name=car_rental --network=minha_rede -p 8081:8081  mrlnnunes/car_rental:latest
