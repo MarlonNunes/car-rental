@@ -37,3 +37,15 @@ jobs:
           file: ./Dockerfile
           push: true
           tags: mrlnnunes/car_rental
+  deploy:
+    needs: build
+    runs-on: self-hosted
+    steps:
+      - name:
+        run: docker pull mrlnnunes/car_rental:latest
+
+      - name: Remove docker container
+        run: docker rm -f car_rental
+
+      - name: Run Docker Container
+        run: docker run -d -p 8081:8081 --network=minha_rede mrlnnunes/car_rental:latest
