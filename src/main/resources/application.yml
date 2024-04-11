@@ -19,6 +19,11 @@ spring:
           auth: true
           starttls:
             enable: true
+logging:
+  level:
+    org:
+      springframework:
+        security: DEBUG
 keycloak:
   url: http://localhost:8080/
   realm: car-rental-security
