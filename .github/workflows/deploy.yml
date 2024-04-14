@@ -24,28 +24,34 @@ jobs:
       - name: Build with Gradle
         run: ./gradlew build
 
-      - name: Log in Docker hub
-        uses: docker/login-action@f4ef78c080cd8ba55a85445d5b36e214a81df20a
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
         with:
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
 
-      - name: Build and push Docker image
-        uses: docker/build-push-action@3b5e8027fcad23fda98b2e3ac259d8d67585f671
-        with:
-          context: .
-          file: ./Dockerfile
-          push: true
-          tags: mrlnnunes/car_rental
+      - name: Zip files
+        run: zip -r car-rental.zip build/libs/*.jar appspec.yml scripts/
+
+      - name: Upload to S3
+        run: aws s3 cp car-rental.zip s3://car-renta-deploy/deploy/backend/
+
   deploy:
     needs: build
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
     steps:
-      - name:
-        run: docker pull mrlnnunes/car_rental:latest
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
 
-      - name: Remove docker container
-        run: docker rm -f car_rental
-
-      - name: Run Docker Container
-        run: docker run -d --name=car_rental --network=minha_rede -p 8081:8081  mrlnnunes/car_rental:latest
+      - name: Create deployment
+        run: |
+          aws deploy create-deployment \
+            --application-name car-rental \
+            --deployment-group-name car-rental-group \
+            --deployment-config-name CodeDeployDefault.OneAtATime \
+            --s3-location bucket=car-renta-deploy,key=deploy/backend/car-rental.zip,bundleType=zip
