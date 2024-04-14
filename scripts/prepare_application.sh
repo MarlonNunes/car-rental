@@ -1,6 +1,5 @@
 #!/bin/bash
 
-cd /home/ec2-user/car-rental
+cd /home/ec2-user/car-rental/build/libs/
 
-JAR_FILE=$(ls *.jar)
-mv $JAR_FILE car-rental.jar
+mv car-rental-0.0.1-SNAPSHOT.jar ../../car-rental.jar
