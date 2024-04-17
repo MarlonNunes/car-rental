@@ -23,7 +23,7 @@ logging:
   level:
     org:
       springframework:
-        security: DEBUG
+        security: INFO
 keycloak:
   url: http://localhost:8080/
   realm: car-rental-security

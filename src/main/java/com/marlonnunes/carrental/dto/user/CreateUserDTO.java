@@ -18,6 +18,8 @@ public record CreateUserDTO(
         @CPF(message = "{dto.user.create-user.cpf.invalid}")
         @NotEmpty(message = "{dto.user.create-user.cpf.not-empty}")
         String cpf,
+
+        @NotEmpty(message = "{dto.user.create-user.roles.not-empty}")
         List<IdNameDTO> roles
 ) {
 }

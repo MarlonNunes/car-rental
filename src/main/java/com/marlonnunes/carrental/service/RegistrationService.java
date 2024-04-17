@@ -1,6 +1,7 @@
 package com.marlonnunes.carrental.service;
 
 import com.marlonnunes.carrental.dto.commons.IdNameDTO;
+import com.marlonnunes.carrental.dto.keycloak.RoleDTO;
 import com.marlonnunes.carrental.dto.keycloak.SaveUserKeycloakDTO;
 import com.marlonnunes.carrental.dto.keycloak.UserKeycloakDTO;
 import com.marlonnunes.carrental.dto.registration.CreatePasswordDTO;
@@ -120,7 +121,7 @@ public class RegistrationService {
         return result;
     }
 
-    public ResponseEntity<List<IdNameDTO>> getAllRoles() {
-        return this.keycloakAPI.getAllRoles();
+    public ResponseEntity<List<RoleDTO>> getAllRoles() {
+        return ResponseEntity.ok(this.keycloakAPI.getAllRoles().getBody().stream().filter(r -> !r.composite()).toList());
     }
 }

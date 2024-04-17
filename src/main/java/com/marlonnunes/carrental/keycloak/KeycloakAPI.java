@@ -1,10 +1,7 @@
 package com.marlonnunes.carrental.keycloak;
 
 import com.marlonnunes.carrental.dto.commons.IdNameDTO;
-import com.marlonnunes.carrental.dto.keycloak.CredentialKeycloakDTO;
-import com.marlonnunes.carrental.dto.keycloak.KeycloakTokenDTO;
-import com.marlonnunes.carrental.dto.keycloak.SaveUserKeycloakDTO;
-import com.marlonnunes.carrental.dto.keycloak.UserKeycloakDTO;
+import com.marlonnunes.carrental.dto.keycloak.*;
 import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -175,7 +172,7 @@ public class KeycloakAPI {
         return result;
     }
 
-    public ResponseEntity<List<IdNameDTO>> getAllRoles(){
+    public ResponseEntity<List<RoleDTO>> getAllRoles(){
         final String path = "admin/realms/" + this.keycloakRealm + "/roles";
 
         UriComponentsBuilder uriBuilder = UriComponentsBuilder.fromHttpUrl(this.keycloakUrl + path)
@@ -188,9 +185,9 @@ public class KeycloakAPI {
 
 
         RestTemplate restTemplate = new RestTemplate();
-        ResponseEntity<IdNameDTO[]> result = null;
+        ResponseEntity<RoleDTO[]> result = null;
         try {
-            result = restTemplate.exchange(uriBuilder.toUriString(), HttpMethod.GET, entity,  IdNameDTO[].class);
+            result = restTemplate.exchange(uriBuilder.toUriString(), HttpMethod.GET, entity,  RoleDTO[].class);
         } catch (HttpClientErrorException e){
             log.error("An error occurred when fetching roles", e);
             throw new ResponseStatusException(e.getStatusCode(), "keycloak.error.roles.get-all");

@@ -26,6 +26,8 @@ dto:
       email:
         not-empty: O e-mail é obrigatório
         invalid: O e-mail é inválido
+      roles:
+        not-empty: O usuário precisa de no mínimo uma permissão
   registration:
     create-password:
       user-id: O id do usuário não pode ser nulo
