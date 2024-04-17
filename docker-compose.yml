@@ -14,6 +14,11 @@ services:
     volumes:
       - "${LOCALSTACK_VOLUME_DIR:-./volume}:/var/lib/localstack"
       - "/var/run/docker.sock:/var/run/docker.sock"
+    deploy:
+      resources:
+        limits:
+          cpus: '0.75'
+          memory: 200M
 
   mysql:
     image: mysql:5.7
@@ -27,6 +32,11 @@ services:
       - "3306:3306"
     volumes:
       - "meu_mysql_volume:/var/lib/mysql"
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 300M
 
   keycloak:
     image: quay.io/keycloak/keycloak
@@ -40,6 +50,11 @@ services:
       KC_DB_URL: jdbc:mysql://mysql:3306/keycloack?createDatabaseIfNotExist=true
     volumes:
       - ./imports:/opt/keycloak/data/import
+    deploy:
+      resources:
+        limits:
+          cpus: '0.75'
+          memory: 800M
     ports:
       - "8080:8080"
     depends_on:
@@ -59,6 +74,11 @@ services:
       - .env
     entrypoint: [ "/bin/sh", "-c" ]
     command: ["yum install -y jq && /create-secret.sh"]
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 50M
 
 volumes:
   meu_mysql_volume:
