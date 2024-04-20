@@ -1,14 +1,24 @@
 package com.marlonnunes.carrental.service;
 
+import com.marlonnunes.carrental.dto.commons.PageDTO;
 import com.marlonnunes.carrental.dto.user.CreateUserDTO;
+import com.marlonnunes.carrental.dto.user.UserDTO;
 import com.marlonnunes.carrental.model.User;
 import com.marlonnunes.carrental.repository.UserRepository;
+import com.marlonnunes.carrental.repository.UserSpecification;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.time.LocalDate;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -48,5 +58,13 @@ public class UserService {
 
     public User saveUser(User user){
         return this.repository.save(user);
+    }
+
+    public ResponseEntity<PageDTO<UserDTO>> search(List<String> names, List<String> emails, List<String> cpfs, List<Long> ids, LocalDate createdAtIni, LocalDate createdAtEnd, Integer page, Integer pageSize, User authUser) {
+        Pageable pageable = PageRequest.of(page -1, pageSize, Sort.by("createdAt").ascending());
+
+        Page<User> userPage = this.repository.findAll(UserSpecification.byCriteria(ids, names, emails, cpfs, createdAtIni, createdAtEnd, authUser), pageable);
+
+        return ResponseEntity.ok(PageDTO.buildFromPage(userPage, UserDTO::fromUser));
     }
 }

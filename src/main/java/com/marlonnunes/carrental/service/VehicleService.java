@@ -77,6 +77,6 @@ public class VehicleService {
 
         Page<Vehicle> vehiclePage = this.repository.findAll(VehicleSpecification.byCriteria(ids, numberPlates, colors, makes, models), pageable);
 
-        return ResponseEntity.ok(PageDTO.buildFromPage(vehiclePage, v -> VehicleDTO.fromVehicle(v)));
+        return ResponseEntity.ok(PageDTO.buildFromPage(vehiclePage, VehicleDTO::fromVehicle));
     }
 }

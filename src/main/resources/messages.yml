@@ -73,6 +73,7 @@ controller:
   global-handle-exception:
     null-pointer: Tentou acessar uma propriedade nula
     exception: Ocorreu um erro desconhecido
+    missing-request-paraneter: Falta algum paramêtro obrigatório.
 
 
 

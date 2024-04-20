@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.server.ResponseStatusException;
@@ -46,6 +47,12 @@ public class GlobalHandleExceptionController {
     public ResponseEntity<ErrorResponseDTO> handleNullPointerException(NullPointerException e){
         log.error("an error has occurred", e);
         return new ResponseEntity<>(ErrorResponseDTO.simpleError(this.getMessage("controller.global-handle-exception.null-pointer")), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @ExceptionHandler(MissingServletRequestParameterException.class)
+    public ResponseEntity<ErrorResponseDTO> handleMissingServletRequestParameterException(MissingServletRequestParameterException e){
+        log.error("an error has ocurred", e);
+        return new ResponseEntity<>(ErrorResponseDTO.simpleError(this.getMessage("controller.global-handle-exception.missing-request-paraneter")), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(Exception.class)
