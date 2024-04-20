@@ -27,6 +27,8 @@ public class User {
     @Column(unique = true)
     private String cpf;
 
+    private Long storeId;
+
     private Boolean enabled;
 
     private String verificationCode;
