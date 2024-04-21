@@ -6,7 +6,7 @@ spring:
   jpa:
     hibernate:
       ddl-auto: update
-    show-sql: true
+    show-sql: false
     database-platform: org.hibernate.dialect.MySQLDialect
   mail:
     host: smtp.gmail.com
@@ -23,7 +23,7 @@ logging:
   level:
     org:
       springframework:
-        security: INFO
+        security: ERROR
 keycloak:
   url: http://localhost:8080/
   realm: car-rental-security

@@ -45,6 +45,15 @@ dto:
       min-daily-value: O valor mínimo é obrigatório
       model-year: O ano do modelo é obrigatório
       manufacture-year: O ano de fabricação é obrigatório
+  store:
+    create:
+      legal-name: O nome da loja é obrigatório
+      cnpj:
+        empty: O CNPJ é obrigatório
+        invalid: O CNPJ não é valido
+      contact-list: Fornceça ao menos um contato
+    update:
+      id: O id da loja não pode ser nulo
 service:
   email-service:
     send-email:
@@ -69,11 +78,21 @@ service:
       not-found: Veículo não encontrado
     create:
       number-plate-already-exists: Placa já cadastrada
+  store-service:
+    get-by-id:
+      not-found: Loja não encontrada
+    save:
+      store-null: Erro ao salvar loja. Objeto nulo
+  store-management-service:
+    update-store:
+      cnpj-already-exist: CNPJ já cadastrado
 controller:
   global-handle-exception:
     null-pointer: Tentou acessar uma propriedade nula
     exception: Ocorreu um erro desconhecido
-    missing-request-paraneter: Falta algum paramêtro obrigatório.
+    missing-request-paraneter: Falta algum paramêtro obrigatório
+    method-not-supported: Método de requisição inválido
+    no-resource-found: Nenhum recurso foi encontrado
 
 
 

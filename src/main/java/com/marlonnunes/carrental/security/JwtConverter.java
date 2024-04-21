@@ -25,7 +25,6 @@ public class JwtConverter implements Converter<Jwt, AbstractAuthenticationToken>
 
 
         String sub = source.getClaim("sub");
-        log.info("Sub: " + sub);
         User user = this.userService.getUserByKeycloakId(sub);
 
 
