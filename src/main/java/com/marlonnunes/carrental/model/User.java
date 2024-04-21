@@ -8,6 +8,10 @@ import java.time.LocalDateTime;
 
 @Entity
 @Data
+@Table(uniqueConstraints = {
+        @UniqueConstraint(name = "UK_user_email", columnNames = {"email"}),
+        @UniqueConstraint(name = "UK_user_cpf", columnNames = {"cpf"})
+})
 public class User {
 
     @Id
@@ -29,17 +33,22 @@ public class User {
 
     private Long storeId;
 
-    private Boolean enabled;
+    private boolean disabled;
 
     private String verificationCode;
 
     private LocalDateTime verificationCodeValidUntil;
 
     private LocalDateTime createdAt;
-
-    private Long createdBy;
+    @ManyToOne
+    @JoinColumn(referencedColumnName = "id", foreignKey = @ForeignKey(name = "FK_user_createdBy"))
+    private User createdBy;
 
     private LocalDateTime updatedAt;
+
+    @ManyToOne
+    @JoinColumn(referencedColumnName = "id", foreignKey = @ForeignKey(name = "FK_user_updatedBy"))
+    private User updatedBy;
 
     public String getFullName(){
         return this.firstName + " " + this.getLastName();

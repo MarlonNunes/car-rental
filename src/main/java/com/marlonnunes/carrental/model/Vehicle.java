@@ -9,6 +9,9 @@ import java.time.LocalDateTime;
 
 @Entity
 @Data
+@Table(uniqueConstraints = {
+        @UniqueConstraint(name = "UK_vehicle_numberPlate", columnNames = {"numberPlate"})
+})
 public class Vehicle {
 
     @Id
@@ -28,11 +31,15 @@ public class Vehicle {
 
     private Color color;
 
-    private Long createdBy;
+    @ManyToOne
+    @JoinColumn(referencedColumnName = "id", foreignKey = @ForeignKey(name = "FK_vehicle_createdBy"))
+    private User createdBy;
 
     private LocalDateTime createdAt;
 
-    private Long updatedBy;
+    @ManyToOne
+    @JoinColumn(referencedColumnName = "id", foreignKey = @ForeignKey(name = "FK_vehicle_updatedBy"))
+    private User updatedBy;
 
     private LocalDateTime updatedAt;
 
