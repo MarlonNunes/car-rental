@@ -1,7 +1,10 @@
 package com.marlonnunes.carrental.dto.user;
 
 import com.marlonnunes.carrental.model.User;
-import org.apache.commons.lang3.StringUtils;
+import com.marlonnunes.carrental.utils.StringUtils;
+
+import java.time.LocalDateTime;
+import java.util.Optional;
 
 public record UserDTO(
         Long id,
@@ -11,7 +14,13 @@ public record UserDTO(
         String keycloakId,
         String email,
         String cpf,
-        Boolean enabled
+        boolean disabled,
+        Long createdBy,
+        String createdByName,
+        LocalDateTime createdAt,
+        Long updatedBy,
+        String updateByName,
+        LocalDateTime updatedAt
 
 
 ) {
@@ -24,8 +33,14 @@ public record UserDTO(
                 user.getFullName(),
                 user.getKeycloakId(),
                 user.getEmail(),
-                user.getCpf(),
-                user.getEnabled()
+                StringUtils.formatCpfOrCnpj(user.getCpf()),
+                user.isDisabled(),
+                Optional.ofNullable(user.getCreatedBy()).map(User::getId).orElse(null),
+                Optional.ofNullable(user.getCreatedBy()).map(User::getFullName).orElse(null),
+                user.getCreatedAt(),
+                Optional.ofNullable(user.getUpdatedBy()).map(User::getId).orElse(null),
+                Optional.ofNullable(user.getUpdatedBy()).map(User::getFullName).orElse(null),
+                user.getUpdatedAt()
         );
     }
 }

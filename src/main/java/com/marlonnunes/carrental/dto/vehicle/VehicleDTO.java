@@ -29,25 +29,6 @@ public record VehicleDTO (
     Integer manufactureYear
     ){
 
-    public static VehicleDTO fromVehicleWithUsers(Vehicle vehicle, User createdBy, User updatedBy){
-        return new VehicleDTO(
-                vehicle.getId(),
-                vehicle.getNumberPlate(),
-                vehicle.getMake(),
-                vehicle.getModel(),
-                ColorDTO.fromColor(vehicle.getColor()),
-                vehicle.getCreatedBy(),
-                createdBy.getFullName(),
-                vehicle.getUpdatedBy(),
-                updatedBy.getFullName(),
-                vehicle.getCreatedAt(),
-                vehicle.getUpdatedAt(),
-                vehicle.getMaxDailyValue(),
-                vehicle.getMinDailyValue(),
-                vehicle.getModelYear(),
-                vehicle.getManufactureYear()
-        );
-    }
 
     public static VehicleDTO fromVehicle(Vehicle vehicle){
         return new VehicleDTO(
@@ -56,10 +37,10 @@ public record VehicleDTO (
                 vehicle.getMake(),
                 vehicle.getModel(),
                 ColorDTO.fromColor(vehicle.getColor()),
-                vehicle.getCreatedBy(),
-               null,
-                vehicle.getUpdatedBy(),
-                null,
+                vehicle.getCreatedBy().getId(),
+               vehicle.getCreatedBy().getFullName(),
+                vehicle.getUpdatedBy().getId(),
+                vehicle.getUpdatedBy().getFullName(),
                 vehicle.getCreatedAt(),
                 vehicle.getUpdatedAt(),
                 vehicle.getMaxDailyValue(),
