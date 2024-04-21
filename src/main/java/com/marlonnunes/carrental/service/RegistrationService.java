@@ -39,7 +39,8 @@ public class RegistrationService {
         User user = new User();
         BeanUtils.copyProperties(userDTO, user);
 
-        user.setCreatedBy(authUser.getId());
+        user.setCreatedBy(authUser);
+        user.setUpdatedBy(authUser);
         user.setCreatedAt(LocalDateTime.now());
         user.setUpdatedAt(LocalDateTime.now());
 

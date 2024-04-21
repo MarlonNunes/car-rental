@@ -1,2 +1,4 @@
-package com.marlonnunes.carrental.controller;public class UserRestController {
+package com.marlonnunes.carrental.controller;
+
+public class UserRestController {
 }

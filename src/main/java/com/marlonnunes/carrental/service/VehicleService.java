@@ -46,23 +46,20 @@ public class VehicleService {
         Vehicle vehicle = new Vehicle();
         BeanUtils.copyProperties(vehicleDTO, vehicle);
 
-        vehicle.setCreatedBy(authUser.getId());
-        vehicle.setUpdatedBy(authUser.getId());
         vehicle.setCreatedAt(LocalDateTime.now());
+        vehicle.setCreatedBy(authUser);
         vehicle.setUpdatedAt(LocalDateTime.now());
+        vehicle.setUpdatedBy(authUser);
 
         vehicle = this.repository.save(vehicle);
 
-        return new ResponseEntity<>(VehicleDTO.fromVehicleWithUsers(vehicle, authUser, authUser), HttpStatus.CREATED);
+        return new ResponseEntity<>(VehicleDTO.fromVehicle(vehicle), HttpStatus.CREATED);
     }
 
     public ResponseEntity<VehicleDTO> getVehicleById(Long id) {
         Vehicle vehicle = this.getById(id);
 
-        Set<Long> userIds = new HashSet<>(List.of(vehicle.getUpdatedBy(), vehicle.getCreatedBy()));
-        Map<Long, User> userMap = this.userService.getByIds(userIds).stream().collect(Collectors.toMap(User::getId, Function.identity(), (current, replace) -> replace));
-
-        return ResponseEntity.ok(VehicleDTO.fromVehicleWithUsers(vehicle, userMap.get(vehicle.getCreatedBy()), userMap.get(vehicle.getUpdatedBy())));
+        return ResponseEntity.ok(VehicleDTO.fromVehicle(vehicle));
     }
 
     public Vehicle getById(Long id){
