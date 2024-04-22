@@ -28,12 +28,8 @@ public class Store {
     private Integer addressNumber;
 
 
-    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    @JoinTable(
-            name = "store_contact",
-            joinColumns = @JoinColumn(name = "store_id", foreignKey = @ForeignKey(name = "FK_store_contact")),
-            inverseJoinColumns = @JoinColumn(name = "contact_id", foreignKey = @ForeignKey(name = "FK_contact_store"))
-    )
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "store_id", foreignKey = @ForeignKey(name = "FK_contact_store"))
     Set<Contact> contacts;
 
     private LocalDateTime createdAt;

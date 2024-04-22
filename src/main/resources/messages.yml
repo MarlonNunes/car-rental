@@ -93,6 +93,7 @@ controller:
     missing-request-paraneter: Falta algum paramêtro obrigatório
     method-not-supported: Método de requisição inválido
     no-resource-found: Nenhum recurso foi encontrado
+    mismatched-input-exception: Foi fornecido algum campo com o tipo inválido
 
 
 
