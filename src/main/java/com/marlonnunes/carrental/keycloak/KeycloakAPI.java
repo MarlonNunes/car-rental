@@ -172,7 +172,7 @@ public class KeycloakAPI {
         return result;
     }
 
-    public ResponseEntity<List<RoleDTO>> getAllRoles(){
+    public ResponseEntity<List<KeycloakRoleDTO>> getAllRoles(){
         final String path = "admin/realms/" + this.keycloakRealm + "/roles";
 
         UriComponentsBuilder uriBuilder = UriComponentsBuilder.fromHttpUrl(this.keycloakUrl + path)
@@ -185,9 +185,9 @@ public class KeycloakAPI {
 
 
         RestTemplate restTemplate = new RestTemplate();
-        ResponseEntity<RoleDTO[]> result = null;
+        ResponseEntity<KeycloakRoleDTO[]> result = null;
         try {
-            result = restTemplate.exchange(uriBuilder.toUriString(), HttpMethod.GET, entity,  RoleDTO[].class);
+            result = restTemplate.exchange(uriBuilder.toUriString(), HttpMethod.GET, entity,  KeycloakRoleDTO[].class);
         } catch (HttpClientErrorException e){
             log.error("An error occurred when fetching roles", e);
             throw new ResponseStatusException(e.getStatusCode(), "keycloak.error.roles.get-all");

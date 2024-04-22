@@ -1,16 +1,22 @@
 package com.marlonnunes.carrental.model;
 
 import jakarta.persistence.*;
-import lombok.Data;
 
-import java.time.LocalDate;
+import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
+
 import java.time.LocalDateTime;
+import java.util.Set;
 
 @Entity
 @Data
+//@Getter
+//@Setter
 @Table(uniqueConstraints = {
         @UniqueConstraint(name = "UK_user_email", columnNames = {"email"}),
-        @UniqueConstraint(name = "UK_user_cpf", columnNames = {"cpf"})
+        @UniqueConstraint(name = "UK_user_cpf", columnNames = {"cpf"}),
+        @UniqueConstraint(name = "UK_user_keycloakId", columnNames = {"keycloakId"})
 })
 public class User {
 
@@ -18,7 +24,6 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = true)
     private String keycloakId;
 
     private String firstName;
@@ -36,6 +41,14 @@ public class User {
     private boolean disabled;
 
     private String verificationCode;
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "user_role",
+            joinColumns = @JoinColumn(name = "user_id", foreignKey = @ForeignKey(name = "FK_user_role")),
+            inverseJoinColumns = @JoinColumn(name = "role_id", foreignKey = @ForeignKey(name = "FK_role_user"))
+    )
+    private Set<Role> roles;
 
     private LocalDateTime verificationCodeValidUntil;
 

@@ -20,6 +20,6 @@ public record CreateUserDTO(
         String cpf,
 
         @NotEmpty(message = "{dto.user.create-user.roles.not-empty}")
-        List<IdNameDTO> roles
+        List<Long> roles
 ) {
 }

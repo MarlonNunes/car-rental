@@ -29,6 +29,7 @@ public class Vehicle {
 
     private Integer manufactureYear;
 
+    @Enumerated(EnumType.STRING)
     private Color color;
 
     @ManyToOne

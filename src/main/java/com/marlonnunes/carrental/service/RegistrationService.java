@@ -1,15 +1,18 @@
 package com.marlonnunes.carrental.service;
 
 import com.marlonnunes.carrental.dto.commons.IdNameDTO;
-import com.marlonnunes.carrental.dto.keycloak.RoleDTO;
+import com.marlonnunes.carrental.dto.keycloak.KeycloakRoleDTO;
 import com.marlonnunes.carrental.dto.keycloak.SaveUserKeycloakDTO;
 import com.marlonnunes.carrental.dto.keycloak.UserKeycloakDTO;
 import com.marlonnunes.carrental.dto.registration.CreatePasswordDTO;
 import com.marlonnunes.carrental.dto.registration.ResetPasswordDTO;
 import com.marlonnunes.carrental.dto.user.CreateUserDTO;
+import com.marlonnunes.carrental.dto.user.RoleDTO;
 import com.marlonnunes.carrental.dto.user.UserDTO;
 import com.marlonnunes.carrental.keycloak.KeycloakAPI;
+import com.marlonnunes.carrental.model.Role;
 import com.marlonnunes.carrental.model.User;
+import com.marlonnunes.carrental.repository.RoleRepository;
 import com.marlonnunes.carrental.utils.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +22,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.List;
 
 @Service
@@ -30,6 +34,9 @@ public class RegistrationService {
     private KeycloakAPI keycloakAPI;
 
     @Autowired EmailService emailService;
+
+    @Autowired
+    private RoleRepository roleRepository;
 
 
 
@@ -44,7 +51,11 @@ public class RegistrationService {
         user.setCreatedAt(LocalDateTime.now());
         user.setUpdatedAt(LocalDateTime.now());
 
-        UserKeycloakDTO userKeycloak = this.keycloakAPI.createUser(SaveUserKeycloakDTO.fromCreateUserDto(userDTO), userDTO.roles()).getBody();
+        List<Role> roles = this.roleRepository.findAllById(userDTO.roles());
+        List<IdNameDTO> rolesKeycloak = roles.stream().map(r -> new IdNameDTO(r.getKeycloakId(), r.getName())).toList();
+
+        UserKeycloakDTO userKeycloak = this.keycloakAPI.createUser(SaveUserKeycloakDTO.fromCreateUserDto(userDTO), rolesKeycloak).getBody();
+        user.setRoles(new HashSet<>(roles));
         user.setKeycloakId(userKeycloak.id());
         this.sendEmailToCreatePassword(user);
 
@@ -123,6 +134,6 @@ public class RegistrationService {
     }
 
     public ResponseEntity<List<RoleDTO>> getAllRoles() {
-        return ResponseEntity.ok(this.keycloakAPI.getAllRoles().getBody().stream().filter(r -> !r.composite()).toList());
+        return ResponseEntity.ok(this.roleRepository.findAll().stream().map(r -> new RoleDTO(r.getId(), r.getName(), r.getDescription())).toList());
     }
 }

@@ -5,6 +5,8 @@ import com.marlonnunes.carrental.utils.StringUtils;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 public record UserDTO(
         Long id,
@@ -14,6 +16,7 @@ public record UserDTO(
         String keycloakId,
         String email,
         String cpf,
+        Set<RoleDTO> roles,
         boolean disabled,
         Long createdBy,
         String createdByName,
@@ -34,6 +37,7 @@ public record UserDTO(
                 user.getKeycloakId(),
                 user.getEmail(),
                 StringUtils.formatCpfOrCnpj(user.getCpf()),
+                user.getRoles().stream().map(r -> new RoleDTO(r.getId(), r.getName(), r.getDescription())).collect(Collectors.toSet()),
                 user.isDisabled(),
                 Optional.ofNullable(user.getCreatedBy()).map(User::getId).orElse(null),
                 Optional.ofNullable(user.getCreatedBy()).map(User::getFullName).orElse(null),

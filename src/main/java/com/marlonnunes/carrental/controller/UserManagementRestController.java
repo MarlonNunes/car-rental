@@ -1,8 +1,9 @@
 package com.marlonnunes.carrental.controller;
 
 import com.marlonnunes.carrental.dto.commons.PageDTO;
-import com.marlonnunes.carrental.dto.keycloak.RoleDTO;
+import com.marlonnunes.carrental.dto.keycloak.KeycloakRoleDTO;
 import com.marlonnunes.carrental.dto.user.CreateUserDTO;
+import com.marlonnunes.carrental.dto.user.RoleDTO;
 import com.marlonnunes.carrental.dto.user.UserDTO;
 import com.marlonnunes.carrental.model.User;
 import com.marlonnunes.carrental.service.RegistrationService;
