@@ -22,6 +22,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 
@@ -51,11 +52,12 @@ public class RegistrationService {
         user.setCreatedAt(LocalDateTime.now());
         user.setUpdatedAt(LocalDateTime.now());
 
-        List<Role> roles = this.roleRepository.findAllById(userDTO.roles());
-        List<IdNameDTO> rolesKeycloak = roles.stream().map(r -> new IdNameDTO(r.getKeycloakId(), r.getName())).toList();
+        Role role = this.roleRepository.findById(userDTO.roleId())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "t"));
+        List<IdNameDTO> rolesKeycloak = Arrays.asList(new IdNameDTO(role.getKeycloakId(), role.getName()));
 
         UserKeycloakDTO userKeycloak = this.keycloakAPI.createUser(SaveUserKeycloakDTO.fromCreateUserDto(userDTO), rolesKeycloak).getBody();
-        user.setRoles(new HashSet<>(roles));
+        user.setRole(role);
         user.setKeycloakId(userKeycloak.id());
         this.sendEmailToCreatePassword(user);
 

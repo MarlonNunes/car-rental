@@ -42,13 +42,9 @@ public class User {
 
     private String verificationCode;
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(
-            name = "user_role",
-            joinColumns = @JoinColumn(name = "user_id", foreignKey = @ForeignKey(name = "FK_user_role")),
-            inverseJoinColumns = @JoinColumn(name = "role_id", foreignKey = @ForeignKey(name = "FK_role_user"))
-    )
-    private Set<Role> roles;
+    @ManyToOne()
+    @JoinColumn(name = "role_id", nullable = false, foreignKey = @ForeignKey(name = "FK_user_role"))
+    private Role role;
 
     private LocalDateTime verificationCodeValidUntil;
 

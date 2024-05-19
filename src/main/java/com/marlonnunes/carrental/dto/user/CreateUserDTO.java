@@ -3,6 +3,7 @@ package com.marlonnunes.carrental.dto.user;
 import com.marlonnunes.carrental.dto.commons.IdNameDTO;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import org.hibernate.validator.constraints.br.CPF;
 
 
@@ -19,7 +20,6 @@ public record CreateUserDTO(
         @NotEmpty(message = "{dto.user.create-user.cpf.not-empty}")
         String cpf,
 
-        @NotEmpty(message = "{dto.user.create-user.roles.not-empty}")
-        List<Long> roles
+        @NotNull Long roleId
 ) {
 }
