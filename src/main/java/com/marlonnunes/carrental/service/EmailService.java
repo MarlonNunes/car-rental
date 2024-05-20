@@ -1,11 +1,13 @@
 package com.marlonnunes.carrental.service;
 
 import com.marlonnunes.carrental.model.User;
+import jakarta.annotation.PostConstruct;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.http.HttpStatus;
@@ -28,6 +30,12 @@ public class EmailService {
 
     @Autowired
     private ResourceLoader resourceLoader;
+
+    @Value("${email.url.create-password}")
+    private String urlCreatePassword;
+
+    @Value("${email.url.reset-password}")
+    private String urlResetPassword;
 
 
     private void sendEmail(String to, String body, String subject){
@@ -61,6 +69,7 @@ public class EmailService {
     private String buildBodyEmailToResetPassword(User user, String idCredential){
         Resource resource = resourceLoader.getResource("classpath:/templates/reset-password.html");
         String body = null;
+        String link = changeLinkVariables(urlResetPassword, user, idCredential);
         try {
             body = IoUtils.toUtf8String(resource.getInputStream());
         } catch (IOException e) {
@@ -68,12 +77,13 @@ public class EmailService {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "service.email-service.build-body-email-to-reset-password.error");
         }
 
-        return this.changeEmailVariables(body, user, idCredential);
+        return this.changeEmailVariables(body, user, link);
     }
 
     private String buildBodyEmailToCreatePassword(User user){
         Resource resource = resourceLoader.getResource("classpath:/templates/create-password.html");
         String body = null;
+        String link = changeLinkVariables(urlCreatePassword, user, "");
         try {
             body = IoUtils.toUtf8String(resource.getInputStream());
         } catch (IOException e) {
@@ -81,16 +91,23 @@ public class EmailService {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "service.email-service.build-body-email-to-create-password.error");
         }
 
-        return this.changeEmailVariables(body, user, "");
+        return this.changeEmailVariables(body, user, link);
 
     }
 
-    private String changeEmailVariables(String body, User user, String idCredential){
+    private String changeEmailVariables(String body, User user, String link){
         body = body.replace("{username}", user.getFirstName());
-        body = body.replace("{verification_code}", user.getVerificationCode());
-        body = body.replace("{credential_id}", idCredential);
+        body = body.replace("{link}", link);
         body = body.replace("{valid_until}", DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss").format(user.getVerificationCodeValidUntil()));
 
         return body;
+    }
+
+    private String changeLinkVariables(String originalLink, User user, String idCredential){
+        String link = originalLink.replace("{userId}", user.getId().toString());
+        link = link.replace("{codeId}", user.getVerificationCode());
+        link = link.replace("{credentialId}", idCredential);
+
+        return link;
     }
 }

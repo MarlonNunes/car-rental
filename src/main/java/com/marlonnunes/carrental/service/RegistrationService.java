@@ -14,6 +14,7 @@ import com.marlonnunes.carrental.model.Role;
 import com.marlonnunes.carrental.model.User;
 import com.marlonnunes.carrental.repository.RoleRepository;
 import com.marlonnunes.carrental.utils.StringUtils;
+import jakarta.annotation.PostConstruct;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

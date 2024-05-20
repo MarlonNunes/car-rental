@@ -1,5 +1,6 @@
 server:
   port: 8081
+  host: http://localhost:4200
 spring:
   datasource:
     driver-class: mysql.cj.jdbc.Driver
@@ -31,3 +32,8 @@ keycloak:
   admin-password: ${keycloak.admin.password}
   admin-client-id: admin-cli
   realm-admin: master
+
+email:
+  url:
+    create-password: ${server.host}/login/create-password?user={userId}&code={codeId}
+    reset-password: ${server.host}/login/reset-password?user={userId}&code={codeId}&credential={credentialId}

@@ -20,6 +20,7 @@ public record CreateUserDTO(
         @NotEmpty(message = "{dto.user.create-user.cpf.not-empty}")
         String cpf,
 
-        @NotNull Long roleId
+        @NotNull(message = "{dto.user.create-user.roles.not-empty}")
+        Long roleId
 ) {
 }
